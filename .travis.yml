@@ -1,0 +1,5 @@
+language: java
+notifications:
+  email:
+    - andrzej.kotwicki@gft.com
+    on_success: always
