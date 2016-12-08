@@ -25,7 +25,7 @@ import static org.hamcrest.Matchers.containsInAnyOrder;
 public class TreeIteratorTest {
 
     private static Path createDirStructure() throws IOException {
-        FileSystem fs = Jimfs.newFileSystem(Configuration.forCurrentPlatform());
+        FileSystem fs = Jimfs.newFileSystem(Configuration.windows());
         Path rootPath = fs.getPath("C:\\Users");
         Files.createDirectory(rootPath);
 
