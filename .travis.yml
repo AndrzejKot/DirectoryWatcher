@@ -1,6 +1,6 @@
 language: java
 notifications:
-  email:
-  recipients:
-    - andrzej.kotwicki@gft.com
-    on_success: always
+email:
+recipients:
+- andrzej.kotwicki@gft.com
+on_success: always
