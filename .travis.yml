@@ -1,8 +1,7 @@
 language: java
 jdk: oraclejdk8
 notifications:
-email:
-recipients:
--kotwicki1989@gmail.com
--andrzej.kotwicki@gft.com
-on_success: always
+  email:
+    recipients:
+      - andrzej.kotwicki@gft.com
+    on_success: always
