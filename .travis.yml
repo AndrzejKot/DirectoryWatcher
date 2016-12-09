@@ -3,6 +3,6 @@ jdk: oraclejdk8
 notifications:
 email:
 recipients:
-- kotwicki1989@gmail.com
-- andrzej.kotwicki@gft.com
+-kotwicki1989@gmail.com
+-andrzej.kotwicki@gft.com
 on_success: always
