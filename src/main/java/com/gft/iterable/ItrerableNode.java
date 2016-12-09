@@ -26,12 +26,12 @@ public class ItrerableNode<T extends Node<T>> implements Iterable<T>{
         private T current;
         private Queue<T> nodeQueue = new LinkedList<>();
 
-        private TreeIterator(@NonNull T root) {
+        private TreeIterator(T root) {
             this.current = root;
-            initCurrentChildren();
+            initNodeChildren();
         }
 
-        private void initCurrentChildren() {
+        private void initNodeChildren() {
             final Iterator<T> iterator = current.getPayload();
             while (iterator.hasNext()) {
                 nodeQueue.add( iterator.next());
@@ -49,7 +49,7 @@ public class ItrerableNode<T extends Node<T>> implements Iterable<T>{
 
             current = nodeQueue.remove();
 
-            initCurrentChildren();
+            initNodeChildren();
 
             if (nodeQueue.isEmpty()) {
                 T node = current;
