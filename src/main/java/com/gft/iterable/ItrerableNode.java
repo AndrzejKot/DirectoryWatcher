@@ -50,17 +50,10 @@ public class ItrerableNode<T extends Node<T>> implements Iterable<T>{
 
         @Override
         public T next() {
-            if(!hasNext()) throw new NoSuchElementException();
+            if(!hasNext()){
+                throw new NoSuchElementException();
+            }
             current = nodeQueue.remove();
-
-            //T node = initNodeChildren();
-
-//            if (nodeQueue.isEmpty()) {
-//                T node = current;
-//                current = null;
-//                return node;
-//            }
-
             return initNodeChildren();
         }
     }
