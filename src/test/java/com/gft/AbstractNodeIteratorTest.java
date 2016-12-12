@@ -29,8 +29,18 @@ public class AbstractNodeIteratorTest {
     }
 
     @Test
+    public void shouldReturnFalse() throws IOException {
+        AbstractNode root = new AbstractNode();
+        Iterator<AbstractNode> iterator = new ItrerableNode<>(root).iterator();
+
+        Assert.assertFalse(iterator.hasNext());
+    }
+
+    @Test
     public void shouldReturnTrue() throws IOException {
         AbstractNode root = new AbstractNode();
+        AbstractNode branchOne = new AbstractNode();
+        root.addChild(branchOne);
         Iterator<AbstractNode> iterator = new ItrerableNode<>(root).iterator();
 
         Assert.assertTrue(iterator.hasNext());

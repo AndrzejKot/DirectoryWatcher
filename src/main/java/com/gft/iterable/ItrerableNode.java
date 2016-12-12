@@ -5,6 +5,7 @@ import lombok.NonNull;
 
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.NoSuchElementException;
 import java.util.Queue;
 
 public class ItrerableNode<T extends Node<T>> implements Iterable<T>{
@@ -30,11 +31,16 @@ public class ItrerableNode<T extends Node<T>> implements Iterable<T>{
             initNodeChildren();
         }
 
-        private void initNodeChildren() {
-            final Iterator<T> iterator = current.getPayload();
+        private T initNodeChildren() {
+            T node = current;
+            final Iterator<T> iterator = node.getPayload();
             while (iterator.hasNext()) {
                 nodeQueue.add( iterator.next());
             }
+            if (nodeQueue.isEmpty()) {
+                current = null;
+            }
+            return node;
         }
 
         @Override
@@ -44,17 +50,18 @@ public class ItrerableNode<T extends Node<T>> implements Iterable<T>{
 
         @Override
         public T next() {
+            if(!hasNext()) throw new NoSuchElementException();
             current = nodeQueue.remove();
 
-            initNodeChildren();
+            //T node = initNodeChildren();
 
-            if (nodeQueue.isEmpty()) {
-                T node = current;
-                current = null;
-                return node;
-            }
+//            if (nodeQueue.isEmpty()) {
+//                T node = current;
+//                current = null;
+//                return node;
+//            }
 
-            return current;
+            return initNodeChildren();
         }
     }
 }

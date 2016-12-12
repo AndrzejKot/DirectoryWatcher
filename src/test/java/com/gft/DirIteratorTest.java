@@ -22,7 +22,7 @@ import java.util.NoSuchElementException;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 
-public class TreeIteratorTest {
+public class DirIteratorTest {
 
     private static Path createDirStructure() throws IOException {
         FileSystem fs = Jimfs.newFileSystem(Configuration.windows());
