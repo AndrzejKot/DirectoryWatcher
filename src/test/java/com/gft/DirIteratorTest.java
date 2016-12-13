@@ -29,7 +29,7 @@ public class DirIteratorTest {
         Path rootPath = fs.getPath("C:\\Users");
         Files.createDirectory(rootPath);
 
-        Path hello = rootPath.resolve("hello.txt"); // /rootPath/hello.txt
+        Path hello = rootPath.resolve("hello.txt");
         Files.write(hello, ImmutableList.of("hello world"), StandardCharsets.UTF_8);
 
         final Path one = rootPath.resolve("one");
@@ -47,14 +47,13 @@ public class DirIteratorTest {
     }
 
     @Test(expected = NoSuchElementException.class)
-    public void shouldThrowNoSuchElementExceptionAfterSecondNext() throws IOException {
+    public void shouldThrowNoSuchElementException() throws IOException {
         FileSystem fs = Jimfs.newFileSystem(Configuration.forCurrentPlatform());
         Path rootPath = fs.getPath("C:\\Root");
         Files.createDirectory(rootPath);
         DirNode rootNode = new DirNode(rootPath);
         Iterator<DirNode> iterator = new ItrerableNode<>(rootNode).iterator();
 
-        iterator.next();
         iterator.next();
     }
 
