@@ -3,6 +3,7 @@ package com.gft;
 import com.gft.watcher.DirWatcher;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Paths;
 import java.nio.file.WatchService;
@@ -31,7 +32,7 @@ public class DirWatcherTest {
 //    }
 
     @Test
-    public void directoryWatcherTest() throws Exception {
+    public void directoryWatcherTest() throws IOException, InterruptedException {
         DirWatcher watcher = new DirWatcher(FileSystems.getDefault().newWatchService());
         watcher.watch(Paths.get("C:\\Users\\ankt\\Desktop\\challenge"));
     }

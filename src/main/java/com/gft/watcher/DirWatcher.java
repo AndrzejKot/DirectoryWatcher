@@ -25,16 +25,13 @@ public class DirWatcher {
         });
     }
 
-    public void watch(Path root) throws IOException {
+    public void watch(Path root) throws IOException, InterruptedException {
         registerRecursive(root);
 
         while (true) {
             final WatchKey key;
-            try {
-                key = watchService.take();
-            } catch (InterruptedException e) {
-                return;
-            }
+            key = watchService.take();
+
 
             for (WatchEvent event : key.pollEvents()) {
                 final WatchEvent.Kind kind = event.kind();
