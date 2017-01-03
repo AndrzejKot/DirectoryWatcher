@@ -8,11 +8,11 @@ import java.util.LinkedList;
 import java.util.NoSuchElementException;
 import java.util.Queue;
 
-public class ItrerableNode<T extends Node<T>> implements Iterable<T>{
+public class IterableNode<T extends Node<T>> implements Iterable<T>{
 
     private final T root;
 
-    public ItrerableNode(@NonNull T root){
+    public IterableNode(@NonNull T root){
         this.root = root;
     }
 
@@ -32,6 +32,7 @@ public class ItrerableNode<T extends Node<T>> implements Iterable<T>{
         }
 
         private T initNodeChildren() {
+            //TODO rozbic na dwie bo nazwa nic nie mowi
             T node = current;
             final Iterator<T> iterator = node.getPayload();
             while (iterator.hasNext()) {

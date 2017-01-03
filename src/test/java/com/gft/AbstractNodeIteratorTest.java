@@ -1,6 +1,6 @@
 package com.gft;
 
-import com.gft.iterable.ItrerableNode;
+import com.gft.iterable.IterableNode;
 import com.gft.node.AbstractNode;
 import org.junit.Assert;
 import org.junit.Test;
@@ -16,13 +16,13 @@ public class AbstractNodeIteratorTest {
 
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerException() {
-        Iterator<AbstractNode> iterator = new ItrerableNode<AbstractNode>(null).iterator();
+        Iterator<AbstractNode> iterator = new IterableNode<AbstractNode>(null).iterator();
     }
 
     @Test(expected = NoSuchElementException.class)
     public void shouldThrowNoSuchElementExceptionAfterSecondNext() throws IOException {
         AbstractNode root = new AbstractNode();
-        Iterator<AbstractNode> iterator = new ItrerableNode<>(root).iterator();
+        Iterator<AbstractNode> iterator = new IterableNode<>(root).iterator();
 
         iterator.next();
         iterator.next();
@@ -31,7 +31,7 @@ public class AbstractNodeIteratorTest {
     @Test
     public void shouldReturnFalse() throws IOException {
         AbstractNode root = new AbstractNode();
-        Iterator<AbstractNode> iterator = new ItrerableNode<>(root).iterator();
+        Iterator<AbstractNode> iterator = new IterableNode<>(root).iterator();
 
         Assert.assertFalse(iterator.hasNext());
     }
@@ -41,7 +41,7 @@ public class AbstractNodeIteratorTest {
         AbstractNode root = new AbstractNode();
         AbstractNode branchOne = new AbstractNode();
         root.addChild(branchOne);
-        Iterator<AbstractNode> iterator = new ItrerableNode<>(root).iterator();
+        Iterator<AbstractNode> iterator = new IterableNode<>(root).iterator();
 
         Assert.assertTrue(iterator.hasNext());
     }
@@ -54,7 +54,7 @@ public class AbstractNodeIteratorTest {
         AbstractNode branchTwo = new AbstractNode();
         root.addChild(branchOne);
         root.addChild(branchTwo);
-        final Iterator<AbstractNode> nodeIterator = new ItrerableNode<>(root).iterator();
+        final Iterator<AbstractNode> nodeIterator = new IterableNode<>(root).iterator();
         //Act
 
         //Assert
