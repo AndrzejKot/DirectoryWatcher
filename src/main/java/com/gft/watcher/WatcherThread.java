@@ -2,12 +2,12 @@ package com.gft.watcher;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.apache.log4j.Logger;
 import rx.Subscriber;
 
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.WatchService;
-import java.util.logging.Logger;
 
 @RequiredArgsConstructor
 public final class WatcherThread extends Thread {
@@ -21,7 +21,7 @@ public final class WatcherThread extends Thread {
         try {
             new DirWatcher(root, watchService, this).watch(subscriber);
         } catch (IOException e) {
-            LOGGER.info(e.getMessage());
+            LOGGER.error(e);
         }
     }
 }
