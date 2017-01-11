@@ -2,19 +2,17 @@ package com.gft.iterable;
 
 import com.gft.node.Node;
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.NoSuchElementException;
 import java.util.Queue;
 
-public class IterableNode<T extends Node<T>> implements Iterable<T>{
+@RequiredArgsConstructor
+public class IterableNode<T> implements Iterable<T>{
 
-    private final T root;
-
-    public IterableNode(@NonNull T root){
-        this.root = root;
-    }
+    @NonNull private final Node root;
 
     @Override
     public Iterator<T> iterator() {
@@ -23,25 +21,29 @@ public class IterableNode<T extends Node<T>> implements Iterable<T>{
 
     private final class TreeIterator implements Iterator<T> {
 
-        private T current;
-        private Queue<T> nodeQueue = new LinkedList<>();
+        private Node current;
+        private Queue<Node> nodeQueue = new LinkedList<>();
 
-        private TreeIterator(T root) {
+        private TreeIterator(Node root) {
             this.current = root;
-            initNodeChildren();
+            getNodeAndSetCurrent();
         }
 
-        private T initNodeChildren() {
-            //TODO rozbic na dwie bo nazwa nic nie mowi
-            T node = current;
-            final Iterator<T> iterator = node.getPayload();
-            while (iterator.hasNext()) {
-                nodeQueue.add( iterator.next());
+        private void fillQueueWithNodeChildren(Node<?> node) {
+            for (Node element : node.getChildren()) {
+                nodeQueue.add(element);
             }
+        }
+
+        private T getNodeAndSetCurrent() {
+            Node<?> node = current;
+
+            fillQueueWithNodeChildren(node);
+
             if (nodeQueue.isEmpty()) {
                 current = null;
             }
-            return node;
+            return (T) node.getPayload();
         }
 
         @Override
@@ -55,7 +57,7 @@ public class IterableNode<T extends Node<T>> implements Iterable<T>{
                 throw new NoSuchElementException();
             }
             current = nodeQueue.remove();
-            return initNodeChildren();
+            return getNodeAndSetCurrent();
         }
     }
 }

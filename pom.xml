@@ -95,7 +95,6 @@
                     <excludes>
                         <exclude>**/RealDirIteratorTest.java</exclude>
                         <exclude>**/RealDirConversionTest.java</exclude>
-                        <exclude>**/DirWatcherTest.java</exclude>
                     </excludes>
                 </configuration>
             </plugin>

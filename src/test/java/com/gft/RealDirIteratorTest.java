@@ -4,6 +4,7 @@ import com.gft.iterable.IterableNode;
 import com.gft.node.DirNode;
 import org.junit.Test;
 
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Iterator;
 
@@ -13,7 +14,7 @@ public class RealDirIteratorTest {
     @Test
     public void shouldReturnAllNodes() {
         DirNode root = new DirNode(Paths.get("C:\\Users\\ankt\\Desktop\\JMS Consumer App"));
-        Iterator<DirNode> iterator = new IterableNode<>(root).iterator();
+        Iterator<Path> iterator = new IterableNode<Path>(root).iterator();
 
         assertThat(iterator).hasSize(30);
     }

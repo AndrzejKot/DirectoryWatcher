@@ -13,15 +13,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class AbstractNodeConversionTest {
     @Test
     public void abstractNodeObservableTest() throws Exception {
-        AbstractNode root = new AbstractNode();
-        AbstractNode branchOne = new AbstractNode();
-        AbstractNode branchTwo = new AbstractNode();
-        List<AbstractNode> elements = new ArrayList<>();
+        AbstractNode root = new AbstractNode("root");
+        AbstractNode branchOne = new AbstractNode("branchOne");
+        AbstractNode branchTwo = new AbstractNode("branchTwo");
+        List<String> elements = new ArrayList<>();
 
         root.addChild(branchOne);
         root.addChild(branchTwo);
-        Observable.from(new IterableNode<>(root)).subscribe(elements::add);
+        Observable.from(new IterableNode<String>(root)).subscribe(elements::add);
 
-        assertThat(elements).containsExactly(branchOne,branchTwo);
+        assertThat(elements).containsExactly("branchOne","branchTwo");
     }
 }

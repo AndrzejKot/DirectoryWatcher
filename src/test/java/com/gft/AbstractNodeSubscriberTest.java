@@ -6,27 +6,25 @@ import org.junit.Test;
 import rx.Observable;
 import rx.observers.TestSubscriber;
 
-import java.util.List;
+import java.util.Arrays;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
+import static junit.framework.TestCase.assertEquals;
 
 public class AbstractNodeSubscriberTest {
     @Test
     public void abstractNodeSubscriberTest() throws Exception {
-        AbstractNode root = new AbstractNode();
-        AbstractNode branchOne = new AbstractNode();
-        AbstractNode branchTwo = new AbstractNode();
-        final Observable<AbstractNode> from = Observable.from(new IterableNode<>(root));
-        TestSubscriber<AbstractNode> testSubscriber = new TestSubscriber<>();
+        AbstractNode root = new AbstractNode("root");
+        AbstractNode branchOne = new AbstractNode("branchOne");
+        AbstractNode branchTwo = new AbstractNode("branchTwo");
+        final Observable<String> from = Observable.from(new IterableNode<>(root));
+        TestSubscriber<String> testSubscriber = new TestSubscriber<>();
 
         root.addChild(branchOne);
         root.addChild(branchTwo);
         from.subscribe(testSubscriber);
-        final List<AbstractNode> abstractNodes = testSubscriber.getOnNextEvents();
 
         testSubscriber.assertNoErrors();
-        assertEquals(abstractNodes.size(), 2);
-        assertThat(abstractNodes).containsExactly(branchOne,branchTwo);
+        assertEquals(testSubscriber.getOnNextEvents().size(), 2);
+        testSubscriber.assertReceivedOnNext(Arrays.asList("branchOne","branchTwo"));
     }
 }

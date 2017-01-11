@@ -2,7 +2,6 @@ package com.gft;
 
 import com.gft.iterable.IterableNode;
 import com.gft.node.DirNode;
-import com.gft.node.Node;
 import com.google.common.jimfs.Configuration;
 import com.google.common.jimfs.Jimfs;
 import org.junit.Assert;
@@ -33,7 +32,7 @@ public class DirIteratorTest {
         Path rootPath = fs.getPath("C:\\Root");
         Files.createDirectory(rootPath);
         DirNode rootNode = new DirNode(rootPath);
-        Iterator<DirNode> iterator = new IterableNode<>(rootNode).iterator();
+        Iterator<Path> iterator = new IterableNode<Path>(rootNode).iterator();
 
         iterator.next();
     }
@@ -42,20 +41,20 @@ public class DirIteratorTest {
     public void shouldReturnTrue() throws IOException {
         final Path root = TestCaseHelper.createDirStructure();
         DirNode rootNode = new DirNode(root);
-        Iterator<DirNode> iterator = new IterableNode<>(rootNode).iterator();
+        Iterator<Path> iterator = new IterableNode<Path>(rootNode).iterator();
 
         Assert.assertTrue(iterator.hasNext());
     }
 
     @Test
-    public void shouldReturnAllNodes() throws IOException {
+    public void shouldReturnThreeNodes() throws IOException {
         final Path root = TestCaseHelper.createDirStructure();
         DirNode rootNode = new DirNode(root);
-        IterableNode<DirNode> iterableNode = new IterableNode<>(rootNode);
+        IterableNode<Path> iterableNode = new IterableNode<>(rootNode);
         List<String> receivedPaths = new ArrayList<>();
 //TODO to sie da jedna linijka
-        for (Node node : iterableNode) {
-            receivedPaths.add(((DirNode)node).getPath().toString());
+        for (Path path : iterableNode) {
+            receivedPaths.add(path.toString());
         }
 
         assertThat(receivedPaths, containsInAnyOrder("C:\\Users\\hello.txt","C:\\Users\\one","C:\\Users\\two"));

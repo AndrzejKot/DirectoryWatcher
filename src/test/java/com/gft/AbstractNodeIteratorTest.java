@@ -21,8 +21,8 @@ public class AbstractNodeIteratorTest {
 
     @Test(expected = NoSuchElementException.class)
     public void shouldThrowNoSuchElementExceptionAfterSecondNext() throws IOException {
-        AbstractNode root = new AbstractNode();
-        Iterator<AbstractNode> iterator = new IterableNode<>(root).iterator();
+        AbstractNode root = new AbstractNode("root");
+        Iterator<String> iterator = new IterableNode<String>(root).iterator();
 
         iterator.next();
         iterator.next();
@@ -30,34 +30,34 @@ public class AbstractNodeIteratorTest {
 
     @Test
     public void shouldReturnFalse() throws IOException {
-        AbstractNode root = new AbstractNode();
-        Iterator<AbstractNode> iterator = new IterableNode<>(root).iterator();
+        AbstractNode root = new AbstractNode("root");
+        Iterator<String> iterator = new IterableNode<String>(root).iterator();
 
         Assert.assertFalse(iterator.hasNext());
     }
 
     @Test
     public void shouldReturnTrue() throws IOException {
-        AbstractNode root = new AbstractNode();
-        AbstractNode branchOne = new AbstractNode();
+        AbstractNode root = new AbstractNode("root");
+        AbstractNode branchOne = new AbstractNode("branchOne");
         root.addChild(branchOne);
-        Iterator<AbstractNode> iterator = new IterableNode<>(root).iterator();
+        Iterator<String> iterator = new IterableNode<String>(root).iterator();
 
         Assert.assertTrue(iterator.hasNext());
     }
 
     @Test
-    public void shouldReturnAllNodes() throws IOException {
+    public void shouldReturnThreeNodes() throws IOException {
         //Arrange
-        AbstractNode root = new AbstractNode();
-        AbstractNode branchOne = new AbstractNode();
-        AbstractNode branchTwo = new AbstractNode();
+        AbstractNode root = new AbstractNode("root");
+        AbstractNode branchOne = new AbstractNode("branchOne");
+        AbstractNode branchTwo = new AbstractNode("branchTwo");
         root.addChild(branchOne);
         root.addChild(branchTwo);
-        final Iterator<AbstractNode> nodeIterator = new IterableNode<>(root).iterator();
+        final Iterator<String> nodeIterator = new IterableNode<String>(root).iterator();
         //Act
 
         //Assert
-        assertThat(nodeIterator).containsExactly(branchOne,branchTwo);
+        assertThat(nodeIterator).containsExactly("branchOne","branchTwo");
     }
 }

@@ -19,7 +19,7 @@ public class DirNodeConversionTest {
         DirNode rootNode = new DirNode(root);
         List<String> elements = new ArrayList<>();
 
-        Observable.from(new IterableNode<>(rootNode)).subscribe(s-> elements.add(s.getPath().toString()));
+        Observable.from(new IterableNode<Path>(rootNode)).subscribe(s-> elements.add(s.toString()));
 
         assertThat(elements).containsExactly("C:\\Users\\hello.txt","C:\\Users\\one","C:\\Users\\two");
     }

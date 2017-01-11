@@ -1,31 +1,25 @@
 package com.gft.node;
 
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import lombok.val;
+
 import java.io.IOException;
-import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
-public class DirNode implements Node<DirNode> {
-    //TODO lombok
-    private final Path path;
-    private List<DirNode> children = new ArrayList<>();
-
-    public DirNode(Path root) {
-        this.path = root;
-    }
-
-    public Path getPath() {
-        return path;
-    }
+@RequiredArgsConstructor
+public class DirNode implements Node<Path> {
+    @NonNull private final Path path;
+    private List<Node<Path>> children = new ArrayList<>();
 
     private void setChildren() {
         try {
             if (Files.isDirectory(path)) {
-                DirectoryStream<Path> dirStream = Files.newDirectoryStream(path);
-                for (Path entry : dirStream) {
+                val dirStream = Files.newDirectoryStream(path);
+                for (val entry : dirStream) {
                     children.add(new DirNode(entry));
                 }
             }
@@ -42,8 +36,13 @@ public class DirNode implements Node<DirNode> {
     }
 
     @Override
-    public Iterator<DirNode> getPayload() {
+    public Path getPayload() {
+        return this.path;
+    }
+
+    @Override
+    public Iterable<Node<Path>> getChildren() {
         setChildren();
-        return children.iterator();
+        return children;
     }
 }

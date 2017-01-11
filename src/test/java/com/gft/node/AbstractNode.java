@@ -1,23 +1,28 @@
 package com.gft.node;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
-public class AbstractNode implements Node<AbstractNode> {
+public class AbstractNode implements Node<String> {
 
-    private List<AbstractNode> children = new ArrayList<>();
+    private String name;
+    private List<Node<String>> children = new ArrayList<>();
 
-    private List<AbstractNode> getChildren() {
-        return children;
+    public AbstractNode(String name) {
+        this.name = name;
     }
 
-    public void addChild(AbstractNode child) {
+    public void addChild(Node<String> child) {
         this.children.add(child);
     }
 
     @Override
-    public Iterator<AbstractNode> getPayload() {
-        return getChildren().iterator();
+    public String getPayload() {
+        return this.name;
+    }
+
+    @Override
+    public Iterable<Node<String>> getChildren() {
+        return children;
     }
 }
