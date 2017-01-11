@@ -23,7 +23,7 @@ public class DirIteratorTest {
 
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerException() {
-        Iterator<DirNode> iterator = new IterableNode<DirNode>(null).iterator();
+        new IterableNode<DirNode>(null).iterator();
     }
 
     @Test(expected = NoSuchElementException.class)

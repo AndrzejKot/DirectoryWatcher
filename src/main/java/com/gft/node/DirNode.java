@@ -9,22 +9,23 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 @RequiredArgsConstructor
 public class DirNode implements Node<Path> {
     @NonNull private final Path path;
     private List<Node<Path>> children = new ArrayList<>();
+    private static final Logger LOGGER = Logger.getLogger(DirNode.class.getName());
 
     private void setChildren() {
-        try {
-            if (Files.isDirectory(path)) {
-                val dirStream = Files.newDirectoryStream(path);
+        if (path.toFile().isDirectory()) {
+            try (val dirStream = Files.newDirectoryStream(path)){
                 for (val entry : dirStream) {
                     children.add(new DirNode(entry));
                 }
+            } catch (IOException e) {
+                LOGGER.info(e.getMessage());
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 

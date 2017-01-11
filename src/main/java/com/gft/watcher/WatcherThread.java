@@ -7,19 +7,21 @@ import rx.Subscriber;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.WatchService;
+import java.util.logging.Logger;
 
 @RequiredArgsConstructor
 public final class WatcherThread extends Thread {
     @NonNull private final Path root;
     @NonNull private final WatchService watchService;
     @NonNull private final Subscriber<Path> subscriber;
+    private static final Logger LOGGER = Logger.getLogger(WatcherThread.class.getName());
 
     @Override
     public void run() {
         try {
             new DirWatcher(root, watchService, this).watch(subscriber);
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.info(e.getMessage());
         }
     }
 }
