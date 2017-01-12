@@ -10,7 +10,7 @@ import java.nio.file.Path;
 import java.nio.file.WatchService;
 
 @RequiredArgsConstructor
-public final class WatcherThread extends Thread {
+public class WatcherThread extends Thread {
     @NonNull private final Path root;
     @NonNull private final WatchService watchService;
     @NonNull private final Subscriber<Path> subscriber;

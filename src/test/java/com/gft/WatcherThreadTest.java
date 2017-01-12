@@ -18,25 +18,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class WatcherThreadTest {
 
-        private Subscriber<Path> initSubscriber(List<Path> paths) {
-        return new Subscriber<Path>() {
-            @Override
-            public void onCompleted() {
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                e.printStackTrace();
-            }
-
-            @Override
-            public void onNext(Path path) {
-//                System.out.println(path);
-                paths.add(path);
-            }
-        };
-    }
-
 //    @Test
 //    public void simpleDirWatcherTest() throws IOException, InterruptedException {
 //        final Path root = Paths.get("C:\\Users\\ankt\\Desktop\\challenge");
@@ -61,7 +42,7 @@ public class WatcherThreadTest {
         Files.createDirectory(rootPath);
 
         List<Path> paths = new ArrayList<>();
-        final Subscriber<Path> subscriber = initSubscriber(paths);
+        final Subscriber<Path> subscriber = TestCaseHelper.initSubscriber(paths);
         WatcherThread watcherThread = new WatcherThread(rootPath, fs.newWatchService(), subscriber);
         watcherThread.start();
         watcherThread.interrupt();
@@ -74,18 +55,9 @@ public class WatcherThreadTest {
         FileSystem fs = Jimfs.newFileSystem(Configuration.windows());
         Path rootPath = fs.getPath("C:\\Users");
         Files.createDirectory(rootPath);
-//
-//        Path hello = rootPath.resolve("hello.txt");
-//        Files.write(hello, ImmutableList.of("hello world"), StandardCharsets.UTF_8);
-//
-//        final Path one = rootPath.resolve("one");
-//        Files.createDirectory(one);
-//
-//        final Path two = rootPath.resolve("two");
-//        Files.createDirectory(two);
 
         List<Path> paths = new ArrayList<>();
-        final Subscriber<Path> subscriber = initSubscriber(paths);
+        final Subscriber<Path> subscriber = TestCaseHelper.initSubscriber(paths);
         WatcherThread watcherThread = new WatcherThread(rootPath, fs.newWatchService(), subscriber);
         watcherThread.start();
 
