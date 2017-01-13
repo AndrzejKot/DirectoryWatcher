@@ -18,7 +18,9 @@ import java.util.concurrent.TimeUnit;
 
 import static com.jayway.awaitility.Awaitility.await;
 import static junit.framework.TestCase.assertTrue;
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.hasSize;
 
 public class WatcherThreadTest {
 
@@ -50,20 +52,23 @@ public class WatcherThreadTest {
     @Test
     public void shouldReturnTwoNodes() throws IOException, InterruptedException {
         FileSystem fs = Jimfs.newFileSystem(Configuration.windows());
-        Path rootPath = fs.getPath("C:\\Users");
-        Files.createDirectory(rootPath);
+        final Path rootPath = fs.getPath("C:\\Users");
+        final Path world = rootPath.resolve("world");
+        final Path test = rootPath.resolve("test");
         List<Path> paths = new ArrayList<>();
         final Subscriber<Path> subscriber = TestCaseHelper.initSubscriber(paths);
         final CountDownLatch doneRegistering = new CountDownLatch(1);
         WatcherThread watcherThread = new WatcherThread(rootPath, fs.newWatchService(), subscriber, doneRegistering);
-        watcherThread.start();
 
+        Files.createDirectory(rootPath);
+        watcherThread.start();
         doneRegistering.await(1, TimeUnit.SECONDS);
-        Files.createDirectory(rootPath.resolve("world"));
-        Files.createDirectory(rootPath.resolve("test"));
+        Files.createDirectory(world);
+        Files.createDirectory(test);
         await().until(newPathIsAdded(paths));
 
-        assertThat(paths).hasSize(2);
+        assertThat(paths, hasSize(2));
+        assertThat(paths, containsInAnyOrder(world,test));
     }
 
     private Callable<Boolean> newPathIsAdded(List<Path> paths) {
