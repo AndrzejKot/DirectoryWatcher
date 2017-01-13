@@ -20,7 +20,12 @@ import static org.mockito.Mockito.when;
 
 public class MockedDirWatcherTest {
 
-
+@Test(expected = IOException.class)
+public void shouldThrowIOException() throws IOException {
+    final DirWatcher dirWatcher = Mockito.mock(DirWatcher.class);
+    Mockito.doThrow(new IOException()).when(dirWatcher).watch(null);
+    dirWatcher.watch(null);
+}
 
     @Test
     public void shouldReturnOneNode() throws IOException, InterruptedException {
