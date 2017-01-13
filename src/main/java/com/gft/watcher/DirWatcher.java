@@ -69,7 +69,7 @@ public class DirWatcher {
                     break;
                 }
             } catch (InterruptedException e) {
-                LOGGER.error(e);
+                watcherThread.interrupt();
             }
         }
 
