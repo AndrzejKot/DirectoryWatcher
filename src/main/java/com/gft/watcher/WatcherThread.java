@@ -18,7 +18,7 @@ public class WatcherThread extends Thread {
     private final CountDownLatch latch;
     private static final Logger LOGGER = Logger.getLogger(WatcherThread.class.getName());
 
-    public WatcherThread(Path root, WatchService watchService, Subscriber<Path> subscriber) {
+    public WatcherThread(@NonNull Path root,@NonNull WatchService watchService,@NonNull Subscriber<Path> subscriber) {
         this.root = root;
         this.watchService = watchService;
         this.subscriber = subscriber;

@@ -27,6 +27,11 @@ public class WatcherThreadTest {
         new WatcherThread(null,null,null,null);
     }
 
+    @Test(expected = NullPointerException.class)
+    public void shouldThrowNullPointerException2() {
+        new WatcherThread(null,null,null);
+    }
+
     @Test
     public void shouldBeInterrupted() throws Exception {
         FileSystem fs = Jimfs.newFileSystem(Configuration.windows());
