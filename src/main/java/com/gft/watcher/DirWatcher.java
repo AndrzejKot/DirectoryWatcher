@@ -9,6 +9,7 @@ import rx.Subscriber;
 import java.io.IOException;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.concurrent.CountDownLatch;
 
 import static java.nio.file.StandardWatchEventKinds.*;
 
@@ -20,7 +21,6 @@ public class DirWatcher {
     private final WatcherThread watcherThread;
     private static final Logger LOGGER = Logger.getLogger(DirNode.class.getName());
 
-
     public void registerRecursive(Path root) throws IOException {
         // register all subfolders
         Files.walkFileTree(root, new SimpleFileVisitor<Path>() {
@@ -31,10 +31,15 @@ public class DirWatcher {
             }
         });
     }
-
     public void watch(Subscriber<Path> subscriber) throws IOException {
-        registerRecursive(root);
+        watch(subscriber,null);
+    }
 
+    void watch(Subscriber<Path> subscriber, CountDownLatch latch) throws IOException {
+        registerRecursive(root);
+        if (latch != null) {
+            latch.countDown();
+        }
         while (!watcherThread.isInterrupted()) {
             final WatchKey key;
             try {

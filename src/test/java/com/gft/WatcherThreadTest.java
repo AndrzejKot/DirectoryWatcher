@@ -12,27 +12,19 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
+import static com.jayway.awaitility.Awaitility.await;
 import static junit.framework.TestCase.assertTrue;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class WatcherThreadTest {
 
-//    @Test
-//    public void simpleDirWatcherTest() throws IOException, InterruptedException {
-//        final Path root = Paths.get("C:\\Users\\ankt\\Desktop\\challenge");
-//        final WatchService watchService = FileSystems.getDefault().newWatchService();
-//        List<Path> paths = new ArrayList<>();
-//        final Subscriber<Path> subscriber = initSubscriber(paths);
-//        WatcherThread watcherThread = new WatcherThread(root, watchService, subscriber);
-//        DirWatcher dirWatcher = new DirWatcher(root, watchService, watcherThread);
-//
-//        dirWatcher.watch(subscriber);
-//    }
-
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerException() {
-        new WatcherThread(null,null,null);
+        new WatcherThread(null,null,null,null);
     }
 
     @Test
@@ -55,20 +47,21 @@ public class WatcherThreadTest {
         FileSystem fs = Jimfs.newFileSystem(Configuration.windows());
         Path rootPath = fs.getPath("C:\\Users");
         Files.createDirectory(rootPath);
-
         List<Path> paths = new ArrayList<>();
         final Subscriber<Path> subscriber = TestCaseHelper.initSubscriber(paths);
-        WatcherThread watcherThread = new WatcherThread(rootPath, fs.newWatchService(), subscriber);
+        final CountDownLatch doneRegistering = new CountDownLatch(1);
+        WatcherThread watcherThread = new WatcherThread(rootPath, fs.newWatchService(), subscriber, doneRegistering);
         watcherThread.start();
 
-        Thread.sleep(100);
-
+        doneRegistering.await(1, TimeUnit.SECONDS);
         Files.createDirectory(rootPath.resolve("world"));
         Files.createDirectory(rootPath.resolve("test"));
-//        Files.delete(one);
-
-        Thread.sleep(5000);
+        await().until(newPathIsAdded(paths));
 
         assertThat(paths).hasSize(2);
+    }
+
+    private Callable<Boolean> newPathIsAdded(List<Path> paths) {
+        return () -> paths.size() == 2;
     }
 }
