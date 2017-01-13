@@ -2,7 +2,7 @@ package com.gft.watcher;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.apache.log4j.Logger;
+import lombok.extern.log4j.Log4j;
 import rx.Subscriber;
 
 import java.io.IOException;
@@ -11,12 +11,12 @@ import java.nio.file.WatchService;
 import java.util.concurrent.CountDownLatch;
 
 @RequiredArgsConstructor
+@Log4j
 public class WatcherThread extends Thread {
     @NonNull private final Path root;
     @NonNull private final WatchService watchService;
     @NonNull private final Subscriber<Path> subscriber;
     private final CountDownLatch latch;
-    private static final Logger LOGGER = Logger.getLogger(WatcherThread.class.getName());
 
     public WatcherThread(@NonNull Path root,@NonNull WatchService watchService,@NonNull Subscriber<Path> subscriber) {
         this.root = root;
@@ -30,7 +30,7 @@ public class WatcherThread extends Thread {
         try {
             new DirWatcher(root, watchService, this).watch(subscriber,latch);
         } catch (IOException e) {
-            LOGGER.error(e);
+            log.error(e);
         }
     }
 }

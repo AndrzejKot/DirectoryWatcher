@@ -2,8 +2,8 @@ package com.gft.node;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j;
 import lombok.val;
-import org.apache.log4j.Logger;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -12,10 +12,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
+@Log4j
 public class DirNode implements Node<Path> {
     @NonNull private final Path path;
     private List<Node<Path>> children = new ArrayList<>();
-    private static final Logger LOGGER = Logger.getLogger(DirNode.class.getName());
 
     private void setChildren() {
             try (val dirStream = Files.newDirectoryStream(path)){
@@ -23,7 +23,7 @@ public class DirNode implements Node<Path> {
                     children.add(new DirNode(entry));
                 }
             } catch (IOException e) {
-                LOGGER.debug(e);
+                log.debug(e);
             }
     }
 

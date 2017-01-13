@@ -1,8 +1,7 @@
 package com.gft.watcher;
 
-import com.gft.node.DirNode;
 import lombok.RequiredArgsConstructor;
-import org.apache.log4j.Logger;
+import lombok.extern.log4j.Log4j;
 import rx.Observable;
 import rx.Subscriber;
 
@@ -14,12 +13,12 @@ import java.util.concurrent.CountDownLatch;
 import static java.nio.file.StandardWatchEventKinds.*;
 
 @RequiredArgsConstructor
+@Log4j
 public class DirWatcher {
 
     private final Path root;
     private final WatchService watchService;
     private final WatcherThread watcherThread;
-    private static final Logger LOGGER = Logger.getLogger(DirNode.class.getName());
 
     public void registerRecursive(Path root) throws IOException {
         // register all subfolders
@@ -59,7 +58,7 @@ public class DirWatcher {
 //                        Observable.create((Observable.OnSubscribe<Path>) observer -> observer.onNext(fullPath)).toBlocking().subscribe(subscriber);
                         subscriber.onNext(Observable.just(fullPath).toBlocking().single());
                     } else if (kind == ENTRY_DELETE) {
-                        LOGGER.info("File deleted: " + fullPath);
+                        log.info("File deleted: " + fullPath);
                         //fullTree.filter(path -> !path.equals(fullPath));//.subscribe(System.out::println);
                     }
                 }
