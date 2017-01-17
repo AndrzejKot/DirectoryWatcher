@@ -47,8 +47,7 @@ public class DirWatcher {
                 }
                 listenForEvents(watchService, subscriber);
             } catch (IOException | InterruptedException e) {
-                log.debug(e);
-                e.printStackTrace();
+                log.error(e);
             }
         });
     }
