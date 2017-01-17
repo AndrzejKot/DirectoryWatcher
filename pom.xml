@@ -137,7 +137,6 @@
                     <excludes>
                         <exclude>**/RealDirIteratorTest.java</exclude>
                         <exclude>**/RealDirConversionTest.java</exclude>
-                        <exclude>**/MockedDirWatcherTest.java</exclude>
                     </excludes>
                 </configuration>
             </plugin>
