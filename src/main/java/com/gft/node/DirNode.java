@@ -17,14 +17,14 @@ public class DirNode implements Node<Path> {
     @NonNull private final Path path;
     private List<Node<Path>> children = new ArrayList<>();
 
-    private void setChildren() throws Exception{
-            try (val dirStream = Files.newDirectoryStream(path)){
-                for (val entry : dirStream) {
-                    children.add(new DirNode(entry));
-                }
-            } catch (IOException e) {
-                log.debug(e);
+    private void setChildren() {
+        try (val dirStream = Files.newDirectoryStream(path)) {
+            for (val entry : dirStream) {
+                children.add(new DirNode(entry));
             }
+        } catch (IOException e) {
+            log.debug(e);
+        }
     }
 
     @Override
@@ -41,11 +41,7 @@ public class DirNode implements Node<Path> {
 
     @Override
     public Iterable<Node<Path>> getChildren() {
-        try {
-            setChildren();
-        } catch (Exception e) {
-            log.info("Poszlo");
-        }
+        setChildren();
         return children;
     }
 }
