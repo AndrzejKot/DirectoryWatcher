@@ -39,25 +39,30 @@ public class DirWatcherTest {
     @Test
     public void shouldReturnThreeNodes() throws IOException, InterruptedException {
         val fs = Jimfs.newFileSystem(Configuration.windows().toBuilder()
-                .setWatchServiceConfiguration(WatchServiceConfiguration.polling(10, TimeUnit.MILLISECONDS)).build());
+                .setWatchServiceConfiguration(WatchServiceConfiguration.polling(100, TimeUnit.MILLISECONDS)).build());
         val rootPath = fs.getPath("C:\\Users");
         val world = rootPath.resolve("world");
         val test = rootPath.resolve("test");
+        val subTest = test.resolve("subTest");
         val hello = rootPath.resolve("hello.txt");
         val testSubscriber = new TestSubscriber<Path>();
         val doneRegistering = new CountDownLatch(1);
 
         Files.createDirectory(rootPath);
         DirWatcher.watch(rootPath, fs.newWatchService(), doneRegistering).subscribeOn(Schedulers.newThread()).subscribe(testSubscriber);
-        doneRegistering.await(100, TimeUnit.MILLISECONDS);
+        doneRegistering.await(1000, TimeUnit.MILLISECONDS);
         Files.createDirectory(world);
         Files.createDirectory(test);
+
+        testSubscriber.awaitValueCount(2, 100, TimeUnit.MILLISECONDS);
+
+        Files.createDirectory(subTest);
         Files.write(hello, ImmutableList.of("hello world"), StandardCharsets.UTF_8);
 
-        assertTrue(testSubscriber.awaitValueCount(3, 1000, TimeUnit.MILLISECONDS));
+        assertTrue(testSubscriber.awaitValueCount(4, 1000, TimeUnit.MILLISECONDS));
         testSubscriber.assertNoErrors();
-        assertEquals(3, testSubscriber.getOnNextEvents().size());
-        assertThat(testSubscriber.getOnNextEvents(), containsInAnyOrder(hello, world, test));
+        assertEquals(4, testSubscriber.getOnNextEvents().size());
+        assertThat(testSubscriber.getOnNextEvents(), containsInAnyOrder(hello, world, test, subTest));
     }
 
 //    @Test
