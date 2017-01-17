@@ -34,7 +34,7 @@ public class DirWatcher {
         }
     }
 
-    static Observable<Path> watch(Path root, WatchService watchService) {
+    public static Observable<Path> watch(Path root, WatchService watchService) {
         return watch(root, watchService, null);
     }
 
