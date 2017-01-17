@@ -24,7 +24,7 @@ public class AbstractNodeSubscriberTest {
         from.subscribe(testSubscriber);
 
         testSubscriber.assertNoErrors();
-        assertEquals(testSubscriber.getOnNextEvents().size(), 2);
+        assertEquals(2, testSubscriber.getOnNextEvents().size());
         testSubscriber.assertReceivedOnNext(Arrays.asList("branchOne","branchTwo"));
     }
 }
