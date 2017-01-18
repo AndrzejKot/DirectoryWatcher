@@ -21,7 +21,6 @@ public class DirWatcher implements Closeable {
     static {
         try {
             watchService = getDefault().newWatchService();
-//            watchService = Jimfs.newFileSystem(Configuration.windows()).newWatchService();
         } catch (IOException e) {
             log.error(e);
         }
@@ -68,19 +67,7 @@ public class DirWatcher implements Closeable {
 
                 Path dir = (Path) key.watchable();
 
-                for (WatchEvent event : key.pollEvents()) {
-                    final WatchEvent.Kind kind = event.kind();
-
-                    @SuppressWarnings("unchecked")
-                    WatchEvent<Path> ev = (WatchEvent<Path>) event;
-
-                    Path fullPath = dir.resolve(ev.context());
-
-                    if (kind == ENTRY_CREATE) {
-                        registerRecursive(fullPath, watchService);
-                        subscriber.onNext(fullPath);
-                    }
-                }
+                handleEvents(watchService, subscriber, key, dir);
                 boolean valid = key.reset();
                 if (!valid) {
                     log.error("DirWatcher key is invalid!");
@@ -92,6 +79,22 @@ public class DirWatcher implements Closeable {
                 log.info("Ending directory watcher thread.");
                 subscriber.onCompleted();
                 Thread.currentThread().interrupt();
+            }
+        }
+    }
+
+    private static void handleEvents(WatchService watchService, Subscriber<? super Path> subscriber, WatchKey key, Path dir) throws IOException {
+        for (WatchEvent event : key.pollEvents()) {
+            final WatchEvent.Kind kind = event.kind();
+
+            @SuppressWarnings("unchecked")
+            WatchEvent<Path> ev = (WatchEvent<Path>) event;
+
+            Path fullPath = dir.resolve(ev.context());
+
+            if (kind == ENTRY_CREATE) {
+                registerRecursive(fullPath, watchService);
+                subscriber.onNext(fullPath);
             }
         }
     }
