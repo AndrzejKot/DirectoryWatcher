@@ -8,7 +8,6 @@ import rx.Subscriber;
 
 import java.io.IOException;
 import java.nio.file.*;
-import java.util.concurrent.CountDownLatch;
 
 import static java.nio.file.StandardWatchEventKinds.*;
 
@@ -35,16 +34,9 @@ public class DirWatcher {
     }
 
     public static Observable<Path> watch(Path root, WatchService watchService) {
-        return watch(root, watchService, null);
-    }
-
-    public static Observable<Path> watch(Path root, WatchService watchService, CountDownLatch latch) {
         return Observable.create(subscriber -> {
             try {
                 registerRecursive(root, watchService);
-                if (latch != null) {
-                    latch.countDown();
-                }
                 listenForEvents(watchService, subscriber);
             } catch (IOException | InterruptedException e) {
                 log.error(e);
