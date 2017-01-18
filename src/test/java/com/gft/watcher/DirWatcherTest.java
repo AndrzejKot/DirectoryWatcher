@@ -36,14 +36,16 @@ public class DirWatcherTest {
 //    public void shouldThrowIllegalAccessError() throws Exception {
 //        val fs = Jimfs.newFileSystem(Configuration.windows().toBuilder()
 //                .setWatchServiceConfiguration(WatchServiceConfiguration.polling(100, TimeUnit.MILLISECONDS)).build());
-//        final WatchService watchService = fs.newWatchService();
 //        val rootPath = fs.getPath("C:\\Users");
+//        val watchService = Mockito.mock(WatchService.class);
+//        val testSubscriber = new TestSubscriber<Path>();
+//        PowerMockito.mock(DirWatcher.class);
+////        PowerMockito.spy(Observable.class);
+////        PowerMockito.doThrow(new IOException()).when(DirWatcher.class, "listenForEvents", watchService, new TestSubscriber<Path>());
+//        when(watchService.take()).thenThrow(new InterruptedException());
+//        PowerMockito.doNothing().when(DirWatcher.class, "registerRecursive", rootPath);
 //
-//        PowerMockito.spy(DirWatcher.class);
-//        PowerMockito.spy(Observable.class);
-//        PowerMockito.doThrow(new IOException()).when(DirWatcher.class, "listenForEvents", watchService, new TestSubscriber<Path>());
-//
-//        DirWatcher.watch(rootPath);
+//        DirWatcher.watch(rootPath, watchService).subscribe(System.out::println);
 //    }
 
     @Test

@@ -77,11 +77,7 @@ public class DirWatcher implements Closeable {
                     Path fullPath = dir.resolve(ev.context());
 
                     if (kind == ENTRY_CREATE) {
-                        try {
-                            registerRecursive(fullPath, watchService);
-                        } catch (IOException e) {
-                            subscriber.onError(e);
-                        }
+                        registerRecursive(fullPath, watchService);
                         subscriber.onNext(fullPath);
                     }
                 }
@@ -89,9 +85,14 @@ public class DirWatcher implements Closeable {
                 if (!valid) {
                     log.error("DirWatcher key is invalid!");
                 }
+            } catch (IOException e) {
+                subscriber.onError(e);
             } catch (InterruptedException e) {
+                log.info("poszlo interrupted?");
                 log.info(e);
                 log.info("Ending directory watcher thread.");
+                subscriber.onCompleted();
+                Thread.currentThread().interrupt();
             }
         }
     }
