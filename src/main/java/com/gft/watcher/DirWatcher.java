@@ -88,7 +88,6 @@ public class DirWatcher implements Closeable {
             } catch (IOException e) {
                 subscriber.onError(e);
             } catch (InterruptedException e) {
-                log.info("poszlo interrupted?");
                 log.info(e);
                 log.info("Ending directory watcher thread.");
                 subscriber.onCompleted();

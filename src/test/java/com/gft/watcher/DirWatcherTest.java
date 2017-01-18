@@ -6,9 +6,6 @@ import com.google.common.jimfs.Jimfs;
 import com.google.common.jimfs.WatchServiceConfiguration;
 import lombok.val;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 import rx.observers.TestSubscriber;
 import rx.schedulers.Schedulers;
 
@@ -23,8 +20,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.junit.Assert.assertTrue;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(DirWatcher.class)
+//@RunWith(PowerMockRunner.class)
+//@PrepareForTest(DirWatcher.class)
 public class DirWatcherTest {
 
 //    @Test
