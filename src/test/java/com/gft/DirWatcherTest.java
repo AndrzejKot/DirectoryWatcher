@@ -47,7 +47,7 @@ public class DirWatcherTest {
         val hello = rootPath.resolve("hello.txt");
         val testSubscriber = new TestSubscriber<Path>();
         val doneRegistering = new CountDownLatch(1);
-
+//TODO travis dont trigger
         Files.createDirectory(rootPath);
         Files.createDirectory(world);
         DirWatcher.watch(rootPath, fs.newWatchService(), doneRegistering).subscribeOn(Schedulers.newThread()).subscribe(testSubscriber);
