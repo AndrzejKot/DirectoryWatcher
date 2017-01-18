@@ -6,13 +6,26 @@ import lombok.extern.log4j.Log4j;
 import rx.Observable;
 import rx.Subscriber;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.nio.file.*;
 
+import static java.nio.file.FileSystems.getDefault;
 import static java.nio.file.StandardWatchEventKinds.*;
 
 @Log4j
-public class DirWatcher {
+public class DirWatcher implements Closeable {
+
+    private static WatchService watchService;
+
+    static {
+        try {
+            watchService = getDefault().newWatchService();
+//            watchService = Jimfs.newFileSystem(Configuration.windows()).newWatchService();
+        } catch (IOException e) {
+            log.error(e);
+        }
+    }
 
     private DirWatcher() {
         throw new IllegalAccessError("Utility class");
@@ -33,40 +46,58 @@ public class DirWatcher {
         }
     }
 
-    public static Observable<Path> watch(Path root, WatchService watchService) {
+    public static Observable<Path> watch(Path root) {
+        return watch(root, watchService);
+    }
+
+    static Observable<Path> watch(Path root, WatchService watchService) {
         return Observable.create(subscriber -> {
             try {
                 registerRecursive(root, watchService);
                 listenForEvents(watchService, subscriber);
-            } catch (IOException | InterruptedException e) {
+            } catch (IOException e) {
                 log.error(e);
             }
         });
     }
 
-    private static void listenForEvents(WatchService watchService, Subscriber<? super Path> subscriber)
-            throws InterruptedException, IOException {
+    private static void listenForEvents(WatchService watchService, Subscriber<? super Path> subscriber) {
         while (!Thread.currentThread().isInterrupted()) {
-            WatchKey key = watchService.take();
-            Path dir = (Path) key.watchable();
+            try {
+                WatchKey key = watchService.take();
 
-            for (WatchEvent event : key.pollEvents()) {
-                final WatchEvent.Kind kind = event.kind();
+                Path dir = (Path) key.watchable();
 
-                @SuppressWarnings("unchecked")
-                WatchEvent<Path> ev = (WatchEvent<Path>) event;
+                for (WatchEvent event : key.pollEvents()) {
+                    final WatchEvent.Kind kind = event.kind();
 
-                Path fullPath = dir.resolve(ev.context());
+                    @SuppressWarnings("unchecked")
+                    WatchEvent<Path> ev = (WatchEvent<Path>) event;
 
-                if (kind == ENTRY_CREATE) {
-                    registerRecursive(fullPath, watchService);
-                    subscriber.onNext(fullPath);
+                    Path fullPath = dir.resolve(ev.context());
+
+                    if (kind == ENTRY_CREATE) {
+                        try {
+                            registerRecursive(fullPath, watchService);
+                        } catch (IOException e) {
+                            subscriber.onError(e);
+                        }
+                        subscriber.onNext(fullPath);
+                    }
                 }
-            }
-            boolean valid = key.reset();
-            if (!valid) {
-                log.error("DirWatcher key is invalid!");
+                boolean valid = key.reset();
+                if (!valid) {
+                    log.error("DirWatcher key is invalid!");
+                }
+            } catch (InterruptedException e) {
+                log.info(e);
+                log.info("Ending directory watcher thread.");
             }
         }
+    }
+
+    @Override
+    public void close() throws IOException {
+        watchService.close();
     }
 }
