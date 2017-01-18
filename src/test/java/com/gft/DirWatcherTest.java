@@ -49,20 +49,18 @@ public class DirWatcherTest {
         val doneRegistering = new CountDownLatch(1);
 
         Files.createDirectory(rootPath);
+        Files.createDirectory(world);
         DirWatcher.watch(rootPath, fs.newWatchService(), doneRegistering).subscribeOn(Schedulers.newThread()).subscribe(testSubscriber);
         doneRegistering.await(1000, TimeUnit.MILLISECONDS);
-        Files.createDirectory(world);
         Files.createDirectory(test);
-
-        testSubscriber.awaitValueCount(2, 100, TimeUnit.MILLISECONDS);
-
+        testSubscriber.awaitValueCount(1, 100, TimeUnit.MILLISECONDS);
         Files.createDirectory(subTest);
         Files.write(hello, ImmutableList.of("hello world"), StandardCharsets.UTF_8);
 
-        assertTrue(testSubscriber.awaitValueCount(4, 1000, TimeUnit.MILLISECONDS));
+        assertTrue(testSubscriber.awaitValueCount(3, 1000, TimeUnit.MILLISECONDS));
         testSubscriber.assertNoErrors();
-        assertEquals(4, testSubscriber.getOnNextEvents().size());
-        assertThat(testSubscriber.getOnNextEvents(), containsInAnyOrder(hello, world, test, subTest));
+        assertEquals(3, testSubscriber.getOnNextEvents().size());
+        assertThat(testSubscriber.getOnNextEvents(), containsInAnyOrder(hello, test, subTest));
     }
 
 //    @Test
