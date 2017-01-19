@@ -11,7 +11,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class DirNodeConversionTest {
+public class DirIterableConversionTest {
 
     @Test
     public void dirNodeObservableTest() throws Exception {

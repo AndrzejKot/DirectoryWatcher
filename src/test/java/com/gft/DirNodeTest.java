@@ -3,19 +3,20 @@ package com.gft;
 import com.gft.node.DirNode;
 import com.google.common.jimfs.Configuration;
 import com.google.common.jimfs.Jimfs;
+import lombok.val;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 import java.io.IOException;
-import java.nio.file.FileSystem;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import static junit.framework.TestCase.assertTrue;
+import static org.mockito.Mockito.verify;
+import static org.mockito.internal.verification.VerificationModeFactory.times;
 
-//@RunWith(PowerMockRunner.class)
-//@PrepareForTest(DirNode.class)
 public class DirNodeTest {
+
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerException() {
         new DirNode(null);
@@ -23,24 +24,19 @@ public class DirNodeTest {
 
     @Test
     public void shouldThrowIOExceptionThusSatisfySonar() throws Exception {
-        Path rootPath = Paths.get("C:\\NonExistingFile");
-        new DirNode(rootPath).getChildren();
+        val rootPath = Paths.get("C:\\NonExistingFile");
+        val dirNode = Mockito.spy(new DirNode(rootPath));
 
+        dirNode.getChildren();
 
-
-//        Files.createDirectory(rootPath);
-//        final DirNode dirNode = PowerMockito.spy(new DirNode(rootPath));
-////        final DirNode dirNode = PowerMockito.mock(DirNode.class);
-//        PowerMockito.doThrow(new IOException()).when(dirNode, "setChildren");
-//        dirNode.getChildren();
-//
-//        verifyPrivate(dirNode).invoke("setChildren");
+        verify(dirNode, times(1)).getChildren();
     }
 
     @Test
     public void shouldReturnStringContainingNodePath() throws IOException {
-        FileSystem fs = Jimfs.newFileSystem(Configuration.windows());
-        Path rootPath = fs.getPath("C:\\Root");
+        val fs = Jimfs.newFileSystem(Configuration.windows());
+        val rootPath = fs.getPath("C:\\Root");
+
         Files.createDirectory(rootPath);
 
         assertTrue(new DirNode(rootPath).toString().contains("C:\\Root"));

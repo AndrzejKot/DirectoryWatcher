@@ -19,7 +19,7 @@ import java.util.NoSuchElementException;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 
-public class DirIteratorTest {
+public class DirIterableTest {
 
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerException() {

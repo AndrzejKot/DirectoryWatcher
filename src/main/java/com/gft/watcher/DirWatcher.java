@@ -33,8 +33,10 @@ public class DirWatcher implements Closeable {
     private static void registerRecursive(Path root, WatchService watchService) throws IOException {
         try {
             root.register(watchService, ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY);
-        } catch (FileSystemException e) {
-            log.debug(e);
+        } catch (NoSuchFileException e) {
+            throw e;
+        }catch (FileSystemException e) {
+            log.info(e);
         }
         for (Path path : new IterableNode<Path>(new DirNode(root))) {
             try {
@@ -46,14 +48,23 @@ public class DirWatcher implements Closeable {
     }
 
     public static Observable<Path> watch(Path root) {
+        log.info("w srodku watch");
         return watch(root, watchService);
     }
 
     static Observable<Path> watch(Path root, WatchService watchService) {
+        log.info("przed create");
         return Observable.create(subscriber -> {
+            log.info("in create");
             try {
+                log.info("przed rejestrowaniu 1");
                 registerRecursive(root, watchService);
+                log.info("po rejestrowaniu 1");
                 listenForEvents(watchService, subscriber);
+            } catch (NoSuchFileException e) {
+                log.info(e);
+                log.info("Ending directory watcher thread.");
+                Thread.currentThread().interrupt();
             } catch (IOException e) {
                 log.error(e);
             }
@@ -75,6 +86,7 @@ public class DirWatcher implements Closeable {
             } catch (IOException e) {
                 subscriber.onError(e);
             } catch (InterruptedException e) {
+                log.info("poszlo");
                 log.info(e);
                 log.info("Ending directory watcher thread.");
                 subscriber.onCompleted();
