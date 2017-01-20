@@ -30,23 +30,6 @@ public class DirWatcher implements Closeable {
         throw new IllegalAccessError("Utility class");
     }
 
-    private static void registerRecursive(Path root, WatchService watchService) throws IOException {
-        try {
-            root.register(watchService, ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY);
-        } catch (NoSuchFileException e) {
-            throw e;
-        }catch (FileSystemException e) {
-            log.debug(e);
-        }
-        for (Path path : new IterableNode<Path>(new DirNode(root))) {
-            try {
-                path.register(watchService, ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY);
-            } catch (FileSystemException e) {
-                log.debug(e);
-            }
-        }
-    }
-
     public static Observable<Path> watch(Path root) {
         return watch(root, watchService);
     }
@@ -64,6 +47,23 @@ public class DirWatcher implements Closeable {
                 log.error(e);
             }
         });
+    }
+
+    private static void registerRecursive(Path root, WatchService watchService) throws IOException {
+        try {
+            root.register(watchService, ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY);
+        } catch (NoSuchFileException e) {
+            throw e;
+        }catch (FileSystemException e) {
+            log.debug(e);
+        }
+        for (Path path : new IterableNode<Path>(new DirNode(root))) {
+            try {
+                path.register(watchService, ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY);
+            } catch (FileSystemException e) {
+                log.debug(e);
+            }
+        }
     }
 
     private static void listenForEvents(WatchService watchService, Subscriber<? super Path> subscriber) {

@@ -27,13 +27,6 @@ import static org.mockito.Matchers.any;
 
 public class DirWatcherTest {
 
-    @Test(timeout = 1000)
-    public void shouldCatchNoSuchFileExceptionAndEndWatchingWithinTimeout() {
-        val rootPath = Paths.get("C:\\NonExistingFile");
-
-        DirWatcher.watch(rootPath).subscribe(System.out::println);
-    }
-
     private class FakeDirStream implements DirectoryStream<Path> {
 
         @Override
@@ -47,26 +40,34 @@ public class DirWatcherTest {
         }
     }
 
-//    private Subscriber<Path> initSubscriber(List<Path> paths) {
-//        return new Subscriber<Path>() {
-//            @Override
-//            public void onCompleted() {
-//            }
+    @Test(timeout = 1000)
+    public void shouldCatchNoSuchFileExceptionAndEndWatchingWithinTimeout() {
+        val rootPath = Paths.get("C:\\NonExistingFile");
+
+        DirWatcher.watch(rootPath).subscribe(System.out::println);
+    }
+
+//    @Test(timeout = 1000)
+//    public void shouldCatchIOExceptionAndEndWatchingWithinTimeout() throws IOException, InterruptedException {
+//        val rootPath = Mockito.spy(Path.class);
+//        val fileSystem = Mockito.spy(FileSystem.class);
+//        val fileSystemProvider = Mockito.spy(FileSystemProvider.class);
+//        val fakeDirStream = new FakeDirStream();
+//        val testSubscriber = new TestSubscriber<Path>();
+//        val watchService = Mockito.mock(WatchService.class);
 //
-//            @Override
-//            public void onError(Throwable e) {
-//                e.printStackTrace();
-//            }
+//        Mockito.doReturn(fakeDirStream).when(fileSystemProvider).newDirectoryStream(any(), any());
+//        Mockito.doReturn(fileSystemProvider).when(fileSystem).provider();
+//        Mockito.doReturn(fileSystem).when(rootPath).getFileSystem();
+//        Mockito.doReturn(null).doThrow(new IOException()).when(rootPath).register(any(), any());
+//        Mockito.doThrow(new IOException()).when(watchService).take();
+//        DirWatcher.watch(rootPath, watchService).subscribe(testSubscriber);
 //
-//            @Override
-//            public void onNext(Path path) {
-//                paths.add(path);
-//            }
-//        };
+//        testSubscriber.assertNoErrors();
 //    }
 
-    @Test
-    public void shouldReturnThreeNodes2() throws IOException, InterruptedException {
+    @Test(timeout = 1000)
+    public void shouldCatchInterruptedExceptionAndEndWatchingWithinTimeout() throws IOException, InterruptedException {
         val rootPath = Mockito.spy(Path.class);
         val fileSystem = Mockito.spy(FileSystem.class);
         val fileSystemProvider = Mockito.spy(FileSystemProvider.class);
