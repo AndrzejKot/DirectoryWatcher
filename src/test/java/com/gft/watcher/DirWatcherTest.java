@@ -1,25 +1,29 @@
 package com.gft.watcher;
 
+import com.gft.iterable.IterableNode;
+import com.gft.node.DirNode;
 import com.google.common.collect.ImmutableList;
 import com.google.common.jimfs.Configuration;
 import com.google.common.jimfs.Jimfs;
 import com.google.common.jimfs.WatchServiceConfiguration;
 import lombok.val;
 import org.junit.Test;
+import org.mockito.Mockito;
 import rx.observers.TestSubscriber;
 import rx.schedulers.Schedulers;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.file.*;
+import java.nio.file.spi.FileSystemProvider;
+import java.util.Iterator;
 import java.util.concurrent.TimeUnit;
 
 import static junit.framework.TestCase.assertEquals;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
 
 public class DirWatcherTest {
 
@@ -29,23 +33,56 @@ public class DirWatcherTest {
 
         DirWatcher.watch(rootPath).subscribe(System.out::println);
     }
+
+    private class FakeDirStream implements DirectoryStream<Path> {
+
+        @Override
+        public Iterator<Path> iterator() {
+            return new IterableNode<Path>(new DirNode(Paths.get("C:\\NonExistingFile"))).iterator();
+        }
+
+        @Override
+        public void close() throws IOException {
+
+        }
+    }
+
+//    private Subscriber<Path> initSubscriber(List<Path> paths) {
+//        return new Subscriber<Path>() {
+//            @Override
+//            public void onCompleted() {
+//            }
 //
-//    @Test
-//    public void shouldThrowIllegalAccessError() throws Exception {
-//        val fs = Jimfs.newFileSystem(Configuration.windows().toBuilder()
-//                .setWatchServiceConfiguration(WatchServiceConfiguration.polling(100, TimeUnit.MILLISECONDS)).build());
-//        val rootPath = fs.getPath("C:\\Users");
-//        val watchService = Mockito.mock(WatchService.class);
-//        val testSubscriber = new TestSubscriber<Path>();
-//        PowerMockito.mock(DirWatcher.class);
-////        PowerMockito.spy(Observable.class);
-////        PowerMockito.doThrow(new IOException()).when(DirWatcher.class, "listenForEvents", watchService, new TestSubscriber<Path>());
-//        when(watchService.take()).thenThrow(new InterruptedException());
-//        PowerMockito.doNothing().when(DirWatcher.class, "registerRecursive", rootPath);
+//            @Override
+//            public void onError(Throwable e) {
+//                e.printStackTrace();
+//            }
 //
-//        DirWatcher.watch(rootPath, watchService).subscribe(System.out::println);
+//            @Override
+//            public void onNext(Path path) {
+//                paths.add(path);
+//            }
+//        };
 //    }
 
+    @Test
+    public void shouldReturnThreeNodes2() throws IOException, InterruptedException {
+        val rootPath = Mockito.spy(Path.class);
+        val fileSystem = Mockito.spy(FileSystem.class);
+        val fileSystemProvider = Mockito.spy(FileSystemProvider.class);
+        val fakeDirStream = new FakeDirStream();
+        val testSubscriber = new TestSubscriber<Path>();
+        val watchService = Mockito.mock(WatchService.class);
+
+        Mockito.doReturn(fakeDirStream).when(fileSystemProvider).newDirectoryStream(any(), any());
+        Mockito.doReturn(fileSystemProvider).when(fileSystem).provider();
+        Mockito.doReturn(fileSystem).when(rootPath).getFileSystem();
+        Mockito.doReturn(null).doReturn(null).when(rootPath).register(any(), any());
+        Mockito.doThrow(new InterruptedException()).when(watchService).take();
+        DirWatcher.watch(rootPath, watchService).subscribe(testSubscriber);
+
+        testSubscriber.assertNoErrors();
+    }
 
     @Test
     public void shouldReturnThreeNodes() throws IOException, InterruptedException {
