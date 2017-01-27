@@ -1,50 +1,50 @@
 var stompClient = null;
+var initialRoot = 'C:\\Users\\ankt\\Desktop\\challenge';
 
-function setConnected(connected) {
-    $("#connect").prop("disabled", connected);
-    $("#disconnect").prop("disabled", !connected);
-    if (connected) {
-        $("#conversation").show();
-    }
-    else {
-        $("#conversation").hide();
-    }
-    $("#greetings").html("");
+function createNewFile() {
+$.ajax({
+    url: "/addFile",
+    data: "name=" + $("#fileName").val(),
+    }).then(function(data) {
+        console.log(data);
+});
 }
 
-function connect() {
-    var socket = new SockJS('/gs-guide-websocket');
-    stompClient = Stomp.over(socket);
-    stompClient.connect({}, function (frame) {
-        setConnected(true);
-        console.log('Connected: ' + frame);
-        stompClient.subscribe('/topic/greetings', function (greeting) {
-            showGreeting(JSON.parse(greeting.body).content);
-        });
+function selectFileClick() {
+//    console.log('Selected file: ' + $('#fileSelector').get(0).files[0].mozFullPath);
+//    initialize();
+}
+
+function initialize() {
+$.ajax({
+    url: "/init",
+    data: "root=" + initialRoot,
+    }).then(function(data) {
+    data.forEach(function(entry) {
+        $("#dirs").append(entry + "\n");
+    });
+
+});
+}
+
+function subscribeToTopic() {
+    stompClient.subscribe('/topic/broadcast', function (message) {
+        $("#dirs").append(message.body + "\n");
     });
 }
 
-function disconnect() {
-    if (stompClient != null) {
-        stompClient.disconnect();
-    }
-    setConnected(false);
-    console.log("Disconnected");
-}
-
-function sendName() {
-    stompClient.send("/app/hello", {}, JSON.stringify({'name': $("#name").val()}));
-}
-
-function showGreeting(message) {
-    $("#greetings").append("<tr><td>" + message + "</td></tr>");
+function prepareWebsocket() {
+    var socket = new SockJS('/watcherWebsocket');
+    stompClient = Stomp.over(socket);
+    stompClient.connect({}, function (frame) {
+        console.log('Connected: ' + frame);
+        subscribeToTopic();
+    });
 }
 
 $(function () {
-    $("form").on('submit', function (e) {
-        e.preventDefault();
-    });
-    $( "#connect" ).click(function() { connect(); });
-    $( "#disconnect" ).click(function() { disconnect(); });
-    $( "#send" ).click(function() { sendName(); });
+    initialize();
+    prepareWebsocket();
+    $( "#sendFileName" ).click(function() { createNewFile(); });
+//    $("#fileSelector").change(function() { selectFileClick(); });
 });

@@ -2,6 +2,7 @@ package com.gft.watcher;
 
 import com.gft.iterable.IterableNode;
 import com.gft.node.DirNode;
+import com.sun.nio.file.SensitivityWatchEventModifier;
 import lombok.extern.log4j.Log4j;
 import rx.Observable;
 import rx.Subscriber;
@@ -51,7 +52,7 @@ public class DirWatcher implements Closeable {
 
     private static void registerRecursive(Path root, WatchService watchService) throws IOException {
         try {
-            root.register(watchService, ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY);
+            root.register(watchService, new WatchEvent.Kind[]{StandardWatchEventKinds.ENTRY_CREATE}, SensitivityWatchEventModifier.HIGH);
         } catch (NoSuchFileException e) {
             throw e;
         }catch (FileSystemException e) {
@@ -59,7 +60,7 @@ public class DirWatcher implements Closeable {
         }
         for (Path path : new IterableNode<Path>(new DirNode(root))) {
             try {
-                path.register(watchService, ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY);
+                path.register(watchService, new WatchEvent.Kind[]{StandardWatchEventKinds.ENTRY_CREATE}, SensitivityWatchEventModifier.HIGH);
             } catch (FileSystemException e) {
                 log.debug(e);
             }
