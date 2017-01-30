@@ -1,7 +1,6 @@
-package com.gft;
+package com.gft.node;
 
 import com.gft.iterable.IterableNode;
-import com.gft.node.AbstractNode;
 import org.junit.Test;
 import rx.Observable;
 
@@ -12,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class AbstractNodeConversionTest {
     @Test
-    public void abstractNodeObservableTest() throws Exception {
+    public void shouldReturnTwoNodes() throws Exception {
         AbstractNode root = new AbstractNode("root");
         AbstractNode branchOne = new AbstractNode("branchOne");
         AbstractNode branchTwo = new AbstractNode("branchTwo");

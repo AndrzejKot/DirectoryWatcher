@@ -1,6 +1,6 @@
-package com.gft;
+package com.gft.iterable;
 
-import com.gft.iterable.IterableNode;
+import com.gft.helper.TestCaseHelper;
 import com.gft.node.DirNode;
 import org.junit.Test;
 import rx.Observable;
@@ -14,7 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class DirIterableConversionTest {
 
     @Test
-    public void dirNodeObservableTest() throws Exception {
+    public void shouldReturnThreeNodes() throws Exception {
         final Path root = TestCaseHelper.createDirStructure();
         DirNode rootNode = new DirNode(root);
         List<String> elements = new ArrayList<>();

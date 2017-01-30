@@ -1,6 +1,5 @@
-package com.gft;
+package com.gft.iterable;
 
-import com.gft.iterable.IterableNode;
 import com.gft.node.DirNode;
 import org.junit.Test;
 import rx.Observable;

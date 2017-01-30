@@ -1,7 +1,6 @@
-package com.gft;
+package com.gft.node;
 
 import com.gft.iterable.IterableNode;
-import com.gft.node.AbstractNode;
 import org.junit.Test;
 import rx.Observable;
 import rx.observers.TestSubscriber;
@@ -12,7 +11,7 @@ import static junit.framework.TestCase.assertEquals;
 
 public class AbstractNodeSubscriberTest {
     @Test
-    public void abstractNodeSubscriberTest() throws Exception {
+    public void shouldReturnTwoNodes() throws Exception {
         AbstractNode root = new AbstractNode("root");
         AbstractNode branchOne = new AbstractNode("branchOne");
         AbstractNode branchTwo = new AbstractNode("branchTwo");

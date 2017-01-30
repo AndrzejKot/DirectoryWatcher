@@ -1,6 +1,5 @@
-package com.gft;
+package com.gft.iterable;
 
-import com.gft.iterable.IterableNode;
 import com.gft.node.DirNode;
 import org.junit.Test;
 
@@ -12,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class RealDirIteratorTest {
     @Test
-    public void shouldReturnAllNodes() {
+    public void shouldReturnThirtyNodes() {
         DirNode root = new DirNode(Paths.get("C:\\Users\\ankt\\Desktop\\JMS Consumer App"));
         Iterator<Path> iterator = new IterableNode<Path>(root).iterator();
 

@@ -1,6 +1,6 @@
-package com.gft;
+package com.gft.iterable;
 
-import com.gft.iterable.IterableNode;
+import com.gft.helper.TestCaseHelper;
 import com.gft.node.DirNode;
 import com.google.common.jimfs.Configuration;
 import com.google.common.jimfs.Jimfs;

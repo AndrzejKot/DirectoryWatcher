@@ -1,4 +1,4 @@
-package com.gft;
+package com.gft.helper;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.jimfs.Configuration;
@@ -10,8 +10,8 @@ import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-class TestCaseHelper {
-    static Path createDirStructure() throws IOException {
+public class TestCaseHelper {
+    public static Path createDirStructure() throws IOException {
         FileSystem fs = Jimfs.newFileSystem(Configuration.windows());
         Path rootPath = fs.getPath("C:\\Users");
         Files.createDirectory(rootPath);

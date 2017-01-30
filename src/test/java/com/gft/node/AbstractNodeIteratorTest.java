@@ -1,7 +1,6 @@
-package com.gft;
+package com.gft.node;
 
 import com.gft.iterable.IterableNode;
-import com.gft.node.AbstractNode;
 import org.junit.Assert;
 import org.junit.Test;
 

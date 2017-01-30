@@ -6,11 +6,10 @@ import com.gft.watcher.DirWatcher;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 import rx.Subscriber;
 import rx.schedulers.Schedulers;
 
@@ -22,8 +21,8 @@ import java.nio.file.Paths;
 import java.util.LinkedList;
 import java.util.List;
 
-@Controller
-public class RequestController {
+@RestController
+class RequestController {
 
     private Path root;
     @Autowired
@@ -48,8 +47,7 @@ public class RequestController {
     }
 
     @RequestMapping(value = "/addFile", method= RequestMethod.GET)
-    @ResponseBody
-    public String addFile(@RequestParam(value="name") String name) throws IOException {
+    String addFile(@RequestParam(value="name") String name) throws IOException {
         val path = Paths.get(root + "\\" + name);
         try {
             Files.createDirectories(path.getParent());
@@ -61,8 +59,7 @@ public class RequestController {
     }
 
     @RequestMapping(value = "/init", method= RequestMethod.GET)
-    @ResponseBody
-    public List<String> getInitialDirStructure(@RequestParam(value="root", required=false,
+    List<String> getInitialDirStructure(@RequestParam(value="root", required=false,
             defaultValue="C:\\Users\\ankt\\Desktop\\challenge") String dir) {
         root = Paths.get(dir);
         val subscriber = initSubscriber();
@@ -73,5 +70,4 @@ public class RequestController {
         }
         return paths;
     }
-
 }

@@ -1,6 +1,5 @@
-package com.gft;
+package com.gft.node;
 
-import com.gft.node.DirNode;
 import com.google.common.jimfs.Configuration;
 import com.google.common.jimfs.Jimfs;
 import lombok.val;
