@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import rx.Subscriber;
 import rx.schedulers.Schedulers;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
@@ -55,7 +56,15 @@ class RequestController {
 
     @RequestMapping(value = "/addFile", method= RequestMethod.GET)
     String addFile(@RequestParam(value="name") String name) throws IOException {
-        val path = Paths.get(root + "\\" + name);
+        final Path path;
+        System.out.println(root);
+        System.out.println(root + File.separator + name);
+//        if (root != null) {
+            path = Paths.get(root + File.separator + name);
+//        } else {
+//            path = Paths.get(File.separator + name);
+//        }
+        System.out.println(path);
         try {
             Files.createDirectories(path.getParent());
             Files.createFile(path);
