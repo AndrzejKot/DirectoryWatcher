@@ -3,6 +3,7 @@ package com.gft.controller;
 import com.gft.iterable.IterableNode;
 import com.gft.node.DirNode;
 import com.gft.watcher.DirWatcher;
+import lombok.extern.log4j.Log4j;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -21,8 +22,13 @@ import java.nio.file.Paths;
 import java.util.LinkedList;
 import java.util.List;
 
+@Log4j
 @RestController
 class RequestController {
+
+    public RequestController() {
+
+    }
 
     private Path root;
     @Autowired
@@ -32,11 +38,12 @@ class RequestController {
         return new Subscriber<Path>() {
             @Override
             public void onCompleted() {
+                //Watcher should never end.
             }
 
             @Override
             public void onError(Throwable e) {
-                e.printStackTrace();
+                log.error(e);
             }
 
             @Override
@@ -53,6 +60,7 @@ class RequestController {
             Files.createDirectories(path.getParent());
             Files.createFile(path);
         } catch (FileAlreadyExistsException e) {
+            log.debug(e);
             return "File: " + name + " already exists! Try with a different name.";
         }
         return "File: " + name + " created successfully.";

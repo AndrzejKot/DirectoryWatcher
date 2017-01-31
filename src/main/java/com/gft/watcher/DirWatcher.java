@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.nio.file.*;
 
 import static java.nio.file.FileSystems.getDefault;
-import static java.nio.file.StandardWatchEventKinds.*;
+import static java.nio.file.StandardWatchEventKinds.ENTRY_CREATE;
 
 @Log4j
 public class DirWatcher implements Closeable {
