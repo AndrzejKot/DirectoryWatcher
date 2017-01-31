@@ -36,6 +36,7 @@ public class RequestControllerTest {
 
     @AfterClass
     public static void tearDown() throws Exception {
+        FileUtils.deleteDirectory(new File("tmp.txt"));
         FileUtils.deleteDirectory(new File("dir"));
     }
 
@@ -47,13 +48,21 @@ public class RequestControllerTest {
     }
 
     @Test
+    public void shouldCatchFileAlreadyExistsException() {
+        testRestTemplate.getForEntity("http://localhost:" + this.port + "/addFile?name=tmp.txt", String.class);
+        val entity = testRestTemplate.getForEntity("http://localhost:" + this.port + "/addFile?name=tmp.txt", String.class);
+
+        assertThat(entity.getBody()).isEqualTo("File: tmp.txt already exists! Try with a different name.");
+    }
+
+    @Test
     public void shouldReturnList() throws Exception {
         val root = Paths.get("C:\\Users\\ankt\\Desktop\\challenge");
         val paths = new LinkedList<String>();
+
         for(val element : new IterableNode<Path>(new DirNode(root))) {
             paths.add(element.toString());
         }
-
         val entity = this.testRestTemplate.getForEntity("http://localhost:" + this.port + "/init", List.class);
 
         assertThat(entity.getBody().size()).isEqualTo(paths.size());
