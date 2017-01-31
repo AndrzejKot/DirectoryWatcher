@@ -36,7 +36,7 @@ public class RequestControllerTest {
 
     @AfterClass
     public static void tearDown() throws Exception {
-        FileUtils.deleteDirectory(new File("null"));
+        FileUtils.deleteDirectory(new File("dir"));
     }
 
     @Test

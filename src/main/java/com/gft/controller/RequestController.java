@@ -26,12 +26,8 @@ import java.util.List;
 @Log4j
 @RestController
 class RequestController {
+    private Path root = Paths.get("dir");
 
-    public RequestController() {
-
-    }
-
-    private Path root;
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
 
@@ -56,15 +52,7 @@ class RequestController {
 
     @RequestMapping(value = "/addFile", method= RequestMethod.GET)
     String addFile(@RequestParam(value="name") String name) throws IOException {
-        final Path path;
-        System.out.println(root);
-        System.out.println(root + File.separator + name);
-//        if (root != null) {
-            path = Paths.get(root + File.separator + name);
-//        } else {
-//            path = Paths.get(File.separator + name);
-//        }
-        System.out.println(path);
+            val path = Paths.get(root + File.separator + name);
         try {
             Files.createDirectories(path.getParent());
             Files.createFile(path);
