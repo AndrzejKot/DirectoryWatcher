@@ -27,7 +27,6 @@ import java.util.List;
 @RestController
 class RequestController {
     private Path root = Paths.get("dir");
-
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
 
@@ -35,7 +34,7 @@ class RequestController {
         return new Subscriber<Path>() {
             @Override
             public void onCompleted() {
-                //Watcher should never end.
+                //This stream should have no end.
             }
 
             @Override
@@ -50,9 +49,9 @@ class RequestController {
         };
     }
 
-    @RequestMapping(value = "/addFile", method= RequestMethod.GET)
-    String addFile(@RequestParam(value="name") String name) throws IOException {
-            val path = Paths.get(root + File.separator + name);
+    @RequestMapping(value = "/addFile", method = RequestMethod.GET)
+    String addFile(@RequestParam(value = "name") String name) throws IOException {
+        val path = Paths.get(root + File.separator + name);
         try {
             Files.createDirectories(path.getParent());
             Files.createFile(path);
@@ -63,14 +62,14 @@ class RequestController {
         return "File: " + name + " created successfully.";
     }
 
-    @RequestMapping(value = "/init", method= RequestMethod.GET)
-    List<String> getInitialDirStructure(@RequestParam(value="root", required=false,
-            defaultValue="C:\\Users\\ankt\\Desktop\\challenge") String dir) {
+    @RequestMapping(value = "/init", method = RequestMethod.GET)
+    List<String> getInitialDirStructure(@RequestParam(value = "root", required = false,
+            defaultValue = "C:\\Users\\ankt\\Desktop\\challenge") String dir) {
         root = Paths.get(dir);
         val subscriber = initSubscriber();
         DirWatcher.watch(root).subscribeOn(Schedulers.newThread()).subscribe(subscriber);
         val paths = new LinkedList<String>();
-        for(Path element : new IterableNode<Path>(new DirNode(root))) {
+        for (Path element : new IterableNode<Path>(new DirNode(root))) {
             paths.add(element.toString());
         }
         return paths;

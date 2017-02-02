@@ -1,5 +1,5 @@
 var stompClient = null;
-var initialRoot = 'C:\\Users\\ankt\\Desktop\\challenge';
+var initialRoot = '\\home';
 
 function createNewFile() {
 $.ajax({
@@ -10,18 +10,13 @@ $.ajax({
 });
 }
 
-function selectFileClick() {
-//    console.log('Selected file: ' + $('#fileSelector').get(0).files[0].mozFullPath);
-//    initialize();
-}
-
 function initialize() {
 $.ajax({
     url: "/init",
     data: "root=" + initialRoot,
     }).then(function(data) {
     data.forEach(function(entry) {
-        $("#dirs").append(entry + "\n");
+        $("#dirs").val($("#dirs").val() + entry + "\n");
     });
 
 });
@@ -29,7 +24,7 @@ $.ajax({
 
 function subscribeToTopic() {
     stompClient.subscribe('/topic/broadcast', function (message) {
-        $("#dirs").append(message.body + "\n");
+        $("#dirs").val($("#dirs").val() + message.body + "\n");
     });
 }
 
@@ -46,5 +41,4 @@ $(function () {
     initialize();
     prepareWebsocket();
     $( "#sendFileName" ).click(function() { createNewFile(); });
-//    $("#fileSelector").change(function() { selectFileClick(); });
 });
