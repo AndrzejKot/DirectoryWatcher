@@ -57,13 +57,13 @@ public class RequestControllerTest {
 
     @Test
     public void shouldReturnList() throws Exception {
-        val root = Paths.get("C:\\Users\\ankt\\Desktop\\challenge");
+        val root = Paths.get(File.separator + "tmp");
         val paths = new LinkedList<String>();
 
         for(val element : new IterableNode<Path>(new DirNode(root))) {
             paths.add(element.toString());
         }
-        val entity = this.testRestTemplate.getForEntity("http://localhost:" + this.port + "/init", List.class);
+        val entity = this.testRestTemplate.getForEntity("http://localhost:" + this.port + "/init?root=tmp", List.class);
 
         assertThat(entity.getBody().size()).isEqualTo(paths.size());
         assertThat(entity.getBody()).containsAll(paths);

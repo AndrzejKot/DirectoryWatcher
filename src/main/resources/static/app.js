@@ -1,5 +1,5 @@
 var stompClient = null;
-var initialRoot = '\\home';
+var initialRoot = 'tmp';
 
 function createNewFile() {
 $.ajax({

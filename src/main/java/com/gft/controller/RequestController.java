@@ -63,9 +63,8 @@ class RequestController {
     }
 
     @RequestMapping(value = "/init", method = RequestMethod.GET)
-    List<String> getInitialDirStructure(@RequestParam(value = "root", required = false,
-            defaultValue = "C:\\Users\\ankt\\Desktop\\challenge") String dir) {
-        root = Paths.get(dir);
+    List<String> getInitialDirStructure(@RequestParam(value = "root") String dir) {
+        root = Paths.get(File.separator + dir);
         val subscriber = initSubscriber();
         DirWatcher.watch(root).subscribeOn(Schedulers.newThread()).subscribe(subscriber);
         val paths = new LinkedList<String>();
