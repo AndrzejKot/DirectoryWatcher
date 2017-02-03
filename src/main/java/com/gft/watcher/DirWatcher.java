@@ -6,7 +6,6 @@ import com.sun.nio.file.SensitivityWatchEventModifier;
 import lombok.extern.log4j.Log4j;
 import rx.Observable;
 import rx.Subscriber;
-import rx.Subscription;
 
 import java.io.Closeable;
 import java.io.IOException;
