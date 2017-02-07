@@ -140,7 +140,7 @@
                 <version>0.4.11</version>
                 <configuration>
                     <imageName>kotwicki1989/directorywatcher</imageName>
-                    <dockerDirectory>src/main/docker</dockerDirectory>
+                    <dockerDirectory>src/main/resources/docker</dockerDirectory>
                     <dockerHost>https://192.168.99.100:2376</dockerHost>
                     <dockerCertPath>C:\Users\ankt\.docker\machine\machines\default</dockerCertPath>
                     <serverId>docker-hub</serverId>
