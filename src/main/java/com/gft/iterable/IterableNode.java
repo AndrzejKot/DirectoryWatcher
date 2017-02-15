@@ -10,7 +10,7 @@ import java.util.NoSuchElementException;
 import java.util.Queue;
 
 @RequiredArgsConstructor
-public class IterableNode<T> implements Iterable<T>{
+public final class IterableNode<T> implements Iterable<T>{
 
     @NonNull private final Node root;
 

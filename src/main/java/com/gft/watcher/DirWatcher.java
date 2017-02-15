@@ -15,7 +15,7 @@ import static java.nio.file.FileSystems.getDefault;
 import static java.nio.file.StandardWatchEventKinds.ENTRY_CREATE;
 
 @Log4j
-public class DirWatcher implements Closeable {
+public final class DirWatcher implements Closeable {
 
     private static WatchService watchService;
 
@@ -31,9 +31,15 @@ public class DirWatcher implements Closeable {
         throw new IllegalAccessError("Utility class");
     }
 
+    /**
+     * Returns stream of changes in root folder structure.
+     * @param root root folder
+     * @return stream that represents changes in root folder structure.
+     */
     public static Observable<Path> watch(Path root) {
         return watch(root, watchService);
     }
+
 
     static Observable<Path> watch(Path root, WatchService watchService) {
         return Observable.create(subscriber -> {
@@ -41,8 +47,7 @@ public class DirWatcher implements Closeable {
                 registerRecursive(root, watchService);
                 listenForEvents(watchService, subscriber);
             } catch (NoSuchFileException e) {
-                log.info(e);
-                log.info("Ending directory watcher thread.");
+                log.info("Ending directory watcher thread.\n" + e);
                 Thread.currentThread().interrupt();
             } catch (IOException e) {
                 log.error(e);

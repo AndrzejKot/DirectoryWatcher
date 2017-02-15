@@ -22,8 +22,30 @@ $.ajax({
 });
 }
 
-function subscribeToTopic() {
-    stompClient.subscribe('/topic/broadcast', function (message) {
+function disableUI() {
+    $("#root").prop("disabled", true);
+    $("#fileName").prop("disabled", true);
+    $("#sendFileName").prop("disabled", true);
+    $("#dirs").prop("disabled", true);
+}
+
+function subscribeToEndSessionTopic() {
+    stompClient.subscribe('/topic/endSession', function (message) {
+        console.log('EndSessionTopic: ' + message.body);
+        disableUI();
+        showPopup();
+    });
+}
+
+function showPopup() {
+var r = confirm("Your session has expired! Press Ok to reload page.");
+if (r == true) {
+    location.reload();
+}
+}
+
+function subscribeToPathsTopic() {
+    stompClient.subscribe('/topic/paths', function (message) {
         $("#dirs").val($("#dirs").val() + message.body + "\n");
     });
 }
@@ -33,7 +55,8 @@ function prepareWebsocket() {
     stompClient = Stomp.over(socket);
     stompClient.connect({}, function (frame) {
         console.log('Connected: ' + frame);
-        subscribeToTopic();
+        subscribeToPathsTopic();
+        subscribeToEndSessionTopic();
     });
 }
 
@@ -41,4 +64,5 @@ $(function () {
     initialize();
     prepareWebsocket();
     $( "#sendFileName" ).click(function() { createNewFile(); });
+    $( "#popup" ).click(function() { showPopup(); });
 });
