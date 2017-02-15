@@ -18,7 +18,6 @@ $.ajax({
     data.forEach(function(entry) {
         $("#dirs").val($("#dirs").val() + entry + "\n");
     });
-
 });
 }
 
@@ -29,19 +28,19 @@ function disableUI() {
     $("#dirs").prop("disabled", true);
 }
 
+function showPopup() {
+var r = confirm("Your session has expired! Press Ok to reload page.");
+if (r == true) {
+    location.reload();
+}
+}
+
 function subscribeToEndSessionTopic() {
     stompClient.subscribe('/topic/endSession', function (message) {
         console.log('EndSessionTopic: ' + message.body);
         disableUI();
         showPopup();
     });
-}
-
-function showPopup() {
-var r = confirm("Your session has expired! Press Ok to reload page.");
-if (r == true) {
-    location.reload();
-}
 }
 
 function subscribeToPathsTopic() {
@@ -64,5 +63,4 @@ $(function () {
     initialize();
     prepareWebsocket();
     $( "#sendFileName" ).click(function() { createNewFile(); });
-    $( "#popup" ).click(function() { showPopup(); });
 });

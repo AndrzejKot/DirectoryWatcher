@@ -26,6 +26,7 @@ final class RequestController {
 
     @Value("${root.dir}")
     private String root;
+    private static final int SESSION_TIMEOUT = 30;
 
     @RequestMapping(value = "/addFile", method = RequestMethod.GET)
     String addFile(@RequestParam(value = "name") String name) throws IOException {
@@ -42,7 +43,7 @@ final class RequestController {
 
     @RequestMapping(value = "/init", method = RequestMethod.GET)
     List<String> startWatching(@RequestParam(value = "root") String dir, HttpSession httpSession) {
-        httpSession.setMaxInactiveInterval(30);
+        httpSession.setMaxInactiveInterval(SESSION_TIMEOUT);
         return getInitialDirStructure();
     }
 
