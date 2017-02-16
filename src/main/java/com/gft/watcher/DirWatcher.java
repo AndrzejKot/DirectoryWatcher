@@ -7,7 +7,6 @@ import lombok.extern.log4j.Log4j;
 import rx.Observable;
 import rx.Subscriber;
 
-import java.io.Closeable;
 import java.io.IOException;
 import java.nio.file.*;
 
@@ -15,7 +14,7 @@ import static java.nio.file.FileSystems.getDefault;
 import static java.nio.file.StandardWatchEventKinds.ENTRY_CREATE;
 
 @Log4j
-public final class DirWatcher implements Closeable {
+public final class DirWatcher {
 
     private static WatchService watchService;
 
@@ -108,10 +107,5 @@ public final class DirWatcher implements Closeable {
                 subscriber.onNext(fullPath);
             }
         }
-    }
-
-    @Override
-    public void close() throws IOException {
-        watchService.close();
     }
 }
