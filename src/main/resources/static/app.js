@@ -1,5 +1,4 @@
 var stompClient = null;
-var initialRoot = 'tmp';
 
 function createNewFile() {
 $.ajax({
@@ -12,8 +11,7 @@ $.ajax({
 
 function initialize() {
 $.ajax({
-    url: "/init",
-    data: "root=" + initialRoot,
+    url: "/init"
     }).then(function(data) {
     data.forEach(function(entry) {
         $("#dirs").val($("#dirs").val() + entry + "\n");
