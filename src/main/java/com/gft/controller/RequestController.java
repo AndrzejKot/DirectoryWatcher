@@ -42,7 +42,7 @@ final class RequestController {
     }
 
     @RequestMapping(value = "/init", method = RequestMethod.GET)
-    List<String> startWatching(HttpSession httpSession) {
+    List<String> getInitialDirStructure(HttpSession httpSession) {
         httpSession.setMaxInactiveInterval(SESSION_TIMEOUT);
         return getInitialDirStructure();
     }

@@ -1,4 +1,6 @@
 var stompClient = null;
+var pathsSubscription = null;
+var endSessionSubscription = null;
 
 function createNewFile() {
 $.ajax({
@@ -26,15 +28,23 @@ function disableUI() {
     $("#dirs").prop("disabled", true);
 }
 
-function showPopup() {
-var r = confirm("Your session has expired! Press Ok to reload page.");
-if (r == true) {
-    location.reload();
+function unsubscribeWebsocket() {
+    pathsSubscription.unsubscribe();
+    endSessionSubscription.unsubscribe();
 }
+
+function showPopup() {
+    var r = confirm("Your session has expired! Press Ok to reload page.");
+    if (r == true) {
+        location.reload();
+    } else {
+        console.log('Unsubscribing!');
+        unsubscribeWebsocket();
+    }
 }
 
 function subscribeToEndSessionTopic() {
-    stompClient.subscribe('/topic/endSession', function (message) {
+    endSessionSubscription = stompClient.subscribe('/topic/endSession', function (message) {
         console.log('EndSessionTopic: ' + message.body);
         disableUI();
         showPopup();
@@ -42,7 +52,7 @@ function subscribeToEndSessionTopic() {
 }
 
 function subscribeToPathsTopic() {
-    stompClient.subscribe('/topic/paths', function (message) {
+    pathsSubscription = stompClient.subscribe('/topic/paths', function (message) {
         $("#dirs").val($("#dirs").val() + message.body + "\n");
     });
 }
@@ -61,4 +71,8 @@ $(function () {
     initialize();
     prepareWebsocket();
     $( "#sendFileName" ).click(function() { createNewFile(); });
+
+    window.onbeforeunload = function () {
+        unsubscribeWebsocket();
+    };
 });
